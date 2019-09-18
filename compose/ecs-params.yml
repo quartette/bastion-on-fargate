@@ -1,0 +1,25 @@
+version: 1
+task_definition:
+  ecs_network_mode: awsvpc
+  task_execution_role: BastionOnFargateRole
+  task_size:
+    cpu_limit: 512
+    mem_limit: 1024
+  services:
+    bastion:
+      cpu_shares: 512
+      mem_limit: 1024
+      mem_reservation: 1024
+      essential: true
+      secrets:
+        - value_from: /activation/ssm/agent/code
+          name: SSM_AGENT_CODE
+        - value_from: /activation/ssm/agent/id
+          name: SSM_AGENT_ID
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+      subnets:
+        - subnet-xxxxxxxx
+        - subnet-zzzzzzzz
+      assign_public_ip: DISABLED
